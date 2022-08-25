@@ -1,7 +1,9 @@
 import moment from "moment";
+import { useAuthContext } from "../hooks/useAuthContext";
 import { useWorkoutsContext } from "../hooks/useWorkoutsContext";
 const WorkoutDetails = ({ workout }) => {
   const { dispatch } = useWorkoutsContext();
+  const { user } = useAuthContext();
 
   const createdAtDate = moment(
     workout.createdAt.split("T")[0],
@@ -12,9 +14,14 @@ const WorkoutDetails = ({ workout }) => {
     "hh:mm:ss"
   ).format("hh:mm a");
 
-  const handleClick = async () => {
+  const handleDelete = async () => {
+    if (!user) {
+      return;
+    }
+
     const response = await fetch("/api/workouts/" + workout._id, {
       method: "DELETE",
+      headers: { Authorization: `Bearer ${user.token}` },
     });
     const json = await response.json();
 
@@ -42,8 +49,14 @@ const WorkoutDetails = ({ workout }) => {
         <strong>Time: </strong>
         {createdAtTime}
       </p>
+      <span
+        className="material-symbols-outlined"
+        style={{ marginRight: "45px" }}
+      >
+        edit
+      </span>
 
-      <span className="material-symbols-outlined" onClick={handleClick}>
+      <span className="material-symbols-outlined" onClick={handleDelete}>
         delete
       </span>
     </div>
