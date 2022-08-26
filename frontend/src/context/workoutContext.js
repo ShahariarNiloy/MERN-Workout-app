@@ -12,6 +12,17 @@ export const workoutsReducer = (state, action) => {
       return {
         workouts: [action.payload, ...state.workouts],
       };
+    case "EDIT_WORKOUT":
+      return {
+        workouts: state.workouts.map((w) => {
+          if (w._id === action.payload._id) {
+            w.title = action.payload.title;
+            w.load = action.payload.load;
+            w.reps = action.payload.reps;
+          }
+          return w;
+        }),
+      };
     case "DELETE_WORKOUT":
       return {
         workouts: state.workouts.filter((w) => w._id !== action.payload._id),

@@ -1,19 +1,26 @@
-import moment from "moment";
+import { useEffect, useState } from "react";
 import { useAuthContext } from "../hooks/useAuthContext";
 import { useWorkoutsContext } from "../hooks/useWorkoutsContext";
-const WorkoutDetails = ({ workout }) => {
+import WorkoutEditForm from "./WorkoutEditForm";
+
+import formatDistanceToNow from "date-fns/formatDistanceToNow";
+
+const WorkoutDetails = ({
+  workout,
+  id,
+  setShowWhichEditForm,
+  showWhichEditForm,
+}) => {
   const { dispatch } = useWorkoutsContext();
   const { user } = useAuthContext();
 
-  const createdAtDate = moment(
-    workout.createdAt.split("T")[0],
-    "YYYY-MM-DD"
-  ).format("DD-MMM-YYYY");
-  const createdAtTime = moment(
-    workout.createdAt.split("T")[1].split(".")[0],
-    "hh:mm:ss"
-  ).format("hh:mm a");
-
+  const [showEditForm, setShowEditForm] = useState(false);
+  const [isUpdate, setIsUpdate] = useState(false);
+  useEffect(() => {
+    if (workout.createdAt !== workout.updatedAt) {
+      setIsUpdate(true);
+    }
+  }, [showWhichEditForm, workout]);
   const handleDelete = async () => {
     if (!user) {
       return;
@@ -30,36 +37,63 @@ const WorkoutDetails = ({ workout }) => {
     }
   };
 
-  return (
-    <div className="workout-details">
-      <h4>{workout.title}</h4>
-      <p>
-        <strong>Load (kg): </strong>
-        {workout.load}
-      </p>
-      <p>
-        <strong>Number of reps: </strong>
-        {workout.reps}
-      </p>
-      <p>
-        <strong>Date: </strong>
-        {createdAtDate}
-      </p>
-      <p>
-        <strong>Time: </strong>
-        {createdAtTime}
-      </p>
-      <span
-        className="material-symbols-outlined"
-        style={{ marginRight: "45px" }}
-      >
-        edit
-      </span>
+  const handleEdit = () => {
+    setShowWhichEditForm(id);
+    setShowEditForm(true);
+  };
 
-      <span className="material-symbols-outlined" onClick={handleDelete}>
-        delete
-      </span>
-    </div>
+  return (
+    <>
+      <div className="workout-details">
+        <h4>{workout.title}</h4>
+        <p>
+          <strong>Load (kg): </strong>
+          {workout.load}
+        </p>
+        <p>
+          <strong>Number of reps: </strong>
+          {workout.reps}
+        </p>
+        <p>
+          <strong>Created: </strong>
+          {formatDistanceToNow(new Date(workout.createdAt), {
+            addSuffix: true,
+          }).replace("about", "About")}
+        </p>
+        {isUpdate ? (
+          <p>
+            <strong>Edited: </strong>
+            {formatDistanceToNow(new Date(workout.updatedAt), {
+              addSuffix: true,
+            }).replace("about", "About")}
+          </p>
+        ) : (
+          <></>
+        )}
+        <span
+          className="material-symbols-outlined"
+          style={{ marginRight: "45px" }}
+          onClick={handleEdit}
+        >
+          edit
+        </span>
+
+        <span className="material-symbols-outlined" onClick={handleDelete}>
+          delete
+        </span>
+      </div>
+
+      {showEditForm && (
+        <WorkoutEditForm
+          key={id}
+          workout={workout}
+          id={id}
+          setShowEditForm={setShowEditForm}
+          setShowWhichEditForm={setShowWhichEditForm}
+          showWhichEditForm={showWhichEditForm}
+        />
+      )}
+    </>
   );
 };
 

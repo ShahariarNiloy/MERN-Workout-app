@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 // components
 import WorkoutDetails from "../components/WorkoutDetails";
@@ -10,7 +10,8 @@ const Home = () => {
   const { workouts, dispatch } = useWorkoutsContext();
 
   const { user } = useAuthContext();
-
+  const [showWhichEditForm, setShowWhichEditForm] = useState("");
+  useEffect(() => {}, [showWhichEditForm, workouts]);
   useEffect(() => {
     const fetchWorkouts = async () => {
       const response = await fetch("/api/workouts", {
@@ -33,7 +34,13 @@ const Home = () => {
       <div className="workouts">
         {workouts &&
           workouts.map((workout) => (
-            <WorkoutDetails workout={workout} key={workout._id} />
+            <WorkoutDetails
+              workout={workout}
+              key={workout._id}
+              id={workout._id}
+              setShowWhichEditForm={setShowWhichEditForm}
+              showWhichEditForm={showWhichEditForm}
+            />
           ))}
       </div>
       <WorkoutForm />

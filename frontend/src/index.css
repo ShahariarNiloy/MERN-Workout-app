@@ -104,6 +104,41 @@ div.error {
 input.error {
   border: 1px solid var(--error);
 }
+
+/* workout edit form */
+
+.workout-edit{
+  
+  margin: 0 auto;
+}
+.edit{
+  width: 400px;
+    margin: auto;
+}
+.workout-edit > label,
+.workout-edit > input {
+  display: inline-block;
+}
+.workout-edit > input {
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+  width:100px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+.close{
+  background: var(--error);
+  border: 0;
+  margin-left: 10px;
+  color: #fff;
+  padding: 10px;
+  font-family: "Poppins";
+  border-radius: 4px;
+  cursor: pointer;
+}
+
 /* navbar */
 nav {
   display: flex;
