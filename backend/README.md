@@ -45,7 +45,7 @@ MONGO_URI=<your_db_connection_string>
 
 Make Sure you are giving proper connection_string, where you have to give your user name and password in the connection_string of the user you just created, who can access the database.
 
-### `Secrete`
+### `SECRET`
 
 Give any secrete key string for your _jwt_ secrete key. It can be any simple or complex string.
 
